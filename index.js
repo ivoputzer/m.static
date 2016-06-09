@@ -3,6 +3,7 @@ const encoding = 'utf8'
 const {createReadStream} = require('fs')
 const {createServer} = require('http')
 const {join, normalize} = require('path')
+const {stringify} = JSON
 
 function static(options){
   if (!options) throw new Error('options are mandatory')
@@ -20,7 +21,7 @@ function requestHandlerFor(options){
 
 function errorHandlerFor(req, res){
   return (err) => {
-    res.end(JSON.stringify(err))
+    res.end(stringify(err))
   }
 }
 
