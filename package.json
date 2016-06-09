@@ -1,0 +1,33 @@
+{
+  "name": "m.static",
+  "version": "0.0.0",
+  "description": "static file server from the m.icro series",
+  "main": "index.js",
+  "bin": {
+    "m.static": "bin/m.static"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  },
+  "scripts": {
+    "test": "mocha",
+    "preversion": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivoputzer/m.static.git"
+  },
+  "keywords": [
+    "static",
+    "file",
+    "server",
+    "http",
+    "m.icro"
+  ],
+  "author": "Ivo von Putzer Reibegg <ivo.putzer@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ivoputzer/m.static/issues"
+  },
+  "homepage": "https://github.com/ivoputzer/m.static#readme"
+}

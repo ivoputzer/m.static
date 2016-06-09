@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+const {static} = require('..')
+
+const port = process.argv[2] || 8088
+const cwd = process.argv[3] || process.cwd()
+
+static({cwd}).listen(port)
