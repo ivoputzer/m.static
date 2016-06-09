@@ -1,4 +1,4 @@
-m.static
+m.static [![Build Status](https://travis-ci.org/ivoputzer/m.static.svg?branch=master)](https://travis-ci.org/ivoputzer/m.static)
 ===
 static file server from the m.icro series
 
