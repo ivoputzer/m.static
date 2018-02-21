@@ -7,7 +7,8 @@
     "m.static": "bin/m.static"
   },
   "devDependencies": {
-    "m.test": "0.0.57"
+    "m.test": "0.0.57",
+    "standard": "^11.0.0"
   },
   "scripts": {
     "test": "m.test",
