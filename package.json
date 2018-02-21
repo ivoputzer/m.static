@@ -7,10 +7,10 @@
     "m.static": "bin/m.static"
   },
   "devDependencies": {
-    "mocha": "^2.5.3"
+    "m.test": "0.0.57"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "m.test",
     "preversion": "npm test"
   },
   "repository": {
@@ -29,5 +29,6 @@
   "bugs": {
     "url": "https://github.com/ivoputzer/m.static/issues"
   },
-  "homepage": "https://github.com/ivoputzer/m.static#readme"
+  "homepage": "https://github.com/ivoputzer/m.static#readme",
+  "dependencies": {}
 }
