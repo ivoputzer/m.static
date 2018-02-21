@@ -5,12 +5,12 @@ const {createServer} = require('http')
 const {join, normalize} = require('path')
 const {stringify} = JSON
 
-function static(options){
+function static(options) {
   if (!options) throw new Error('options are mandatory')
   return createServer(requestHandlerFor(options))
 }
 
-function requestHandlerFor(options){
+function requestHandlerFor(options) {
   return (req, res) => {
     const filename = join(options.cwd, normalize(req.url))
     createReadStream(filename)
