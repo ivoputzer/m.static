@@ -1,22 +1,21 @@
-const {static} = require('..')
+const {createFileServer} = require('..')
 const {get} = require('http')
 const {equal, throws, notEqual} = require('assert')
-const {join} = require('path')
-const {test}= require('m.test')
+const {test} = require('m.test')
 
 test('m.icro', function () {
   test('uses standard module loading', () => {
     let module = require('..')
-    notEqual(module.static, undefined)
+    notEqual(module.createFileServer, undefined)
   })
 })
 
-test('m.static', function(){
+test('m.createFileServer', function () {
   test('throws an error when no options are given', () => {
-    throws(static, Error)
+    throws(createFileServer, Error)
   })
 
-  const server = static({cwd: __dirname})
+  const server = createFileServer({cwd: __dirname})
 
   test('exposes a `listen` fn as of net.Server', () => {
     equal(typeof server.listen, 'function')
@@ -26,7 +25,7 @@ test('m.static', function(){
     equal(typeof server.close, 'function')
   })
 
-  test('loads static files within `cwd`', (done) => {
+  test('loads createFileServer files within `cwd`', (done) => {
     server.listen(9999, () => {
       get('http://localhost:9999/index.html', (res) => {
         equal(200, res.statusCode)
