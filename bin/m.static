@@ -4,5 +4,6 @@ const {createFileServer} = require('..')
 
 const port = process.argv[2] || 8088
 const cwd = process.argv[3] || process.cwd()
+const defaultFile = process.argv[4] || 'index.html'
 
-createFileServer({cwd}).listen(port)
+createFileServer({cwd, defaultFile}).listen(port)
