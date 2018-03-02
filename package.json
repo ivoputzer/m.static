@@ -12,6 +12,7 @@
   },
   "scripts": {
     "test": "m.test",
+    "start": "node bin/m.static $@",
     "preversion": "npm test"
   },
   "repository": {
