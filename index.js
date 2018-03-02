@@ -19,15 +19,16 @@ function requestHandlerFor (options) {
 
 function errorHandlerFor (req, res, options) {
   const {parse} = require('url')
+  const {join} = require('path')
   const {pathname} = parse(req.url)
   return (err) => {
-    if (pathname.length === 1) {
-      createReadStream(options.defaultFile)
-        .on('error', errorHandlerFor(req, res, options))
-        .pipe(res)
-    } else {
+    if (err.code !== 'EISDIR') {
       res.end(stringify(err))
+      return
     }
+    createReadStream(join(options.cwd, pathname, options.defaultFile))
+      .on('error', errorHandlerFor(req, res, options))
+      .pipe(res)
   }
 }
 
