@@ -18,12 +18,13 @@ function requestHandlerFor (options) {
 }
 
 function errorHandlerFor (req, res, options) {
+  const {parse} = require('url')
+  const {pathname} = parse(req.url)
   return (err) => {
-    if (err.errno === -21) {
-      res.writeHead(301, {
-        'Location': `/${options.defaultFile}`
-      })
-      res.end()
+    if (pathname.length === 1) {
+      createReadStream(options.defaultFile)
+        .on('error', errorHandlerFor(req, res, options))
+        .pipe(res)
     } else {
       res.end(stringify(err))
     }
