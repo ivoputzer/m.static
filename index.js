@@ -26,17 +26,12 @@ class RequestHandler {
 
   error (err) {
     if (err.code === 'EISDIR') {
-      const {pathname} = parse(this.req.url)
-      const filename = join(this.options.cwd, pathname, this.options.defaultFile)
-
-      return this.readStream(filename)
+      return this.readStream(this.defaultFilePath())
     }
 
     if (err.code === 'ENOENT') {
-      const filename = join(this.options.cwd, this.options.errorFile)
       this.res.writeHead(404)
-
-      return this.readStream(filename)
+      return this.readStream(this.errorFilePath())
     }
 
     this.res.end(stringify(err))
@@ -46,6 +41,15 @@ class RequestHandler {
     createReadStream(filename)
       .on('error', (err) => this.error(err))
       .pipe(this.res)
+  }
+
+  errorFilePath () {
+    return join(this.options.cwd, this.options.errorFilePath)
+  }
+
+  defaultFilePath () {
+    const {pathname} = parse(this.req.url)
+    return join(this.options.cwd, pathname, this.options.defaultFile)
   }
 }
 
