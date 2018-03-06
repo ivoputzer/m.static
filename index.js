@@ -28,16 +28,18 @@ class RequestHandler {
     if (err.code === 'EISDIR') {
       const {pathname} = parse(this.req.url)
       const filename = join(this.options.cwd, pathname, this.options.defaultFile)
-      this.readStream(filename)
 
-    } else if (err.code === 'ENOENT') {
+      return this.readStream(filename)
+    }
+
+    if (err.code === 'ENOENT') {
       const filename = join(this.options.cwd, this.options.errorFile)
       this.res.writeHead(404)
-      this.readStream(filename)
 
-    } else {
-      this.res.end(stringify(err))
+      return this.readStream(filename)
     }
+
+    this.res.end(stringify(err))
   }
 
   readStream (filename) {
