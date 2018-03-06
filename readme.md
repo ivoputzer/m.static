@@ -3,8 +3,17 @@
 
 **[m(icro)](https://github.com/ivoputzer/m.cro#readme)[static](https://github.com/ivoputzer/m.static)** is a lightweight static file server written in nodejs to use on the fly.
 
+# Local Usage
+
+```
+  $ npm i
+  $ npm start [port] [cwd] [defaultFile] [errorFile]
+```
+
+# Global Install
+
 when installed globally `m.static` can be used as follows:
 ```
   $ npm i -g m.static
-  $ m.static [port] [cwd] [defaultFile]
+  $ m.static [port] [cwd] [defaultFile] [errorFile]
 ```
