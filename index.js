@@ -22,13 +22,20 @@ function errorHandlerFor (req, res, options) {
   const {join} = require('path')
   const {pathname} = parse(req.url)
   return (err) => {
-    if (err.code !== 'EISDIR') {
+    if (err.code === 'EISDIR') {
+      const filename = join(options.cwd, pathname, options.defaultFile)
+      createReadStream(filename)
+        .on('error', errorHandlerFor(req, res, options))
+        .pipe(res)
+    } else if (err.code === 'ENOENT') {
+      const filename = join(options.cwd, options.errorFile)
+      res.writeHead(404)
+      createReadStream(filename)
+        .on('error', errorHandlerFor(req, res, options))
+        .pipe(res)
+    } else {
       res.end(stringify(err))
-      return
     }
-    createReadStream(join(options.cwd, pathname, options.defaultFile))
-      .on('error', errorHandlerFor(req, res, options))
-      .pipe(res)
   }
 }
 
