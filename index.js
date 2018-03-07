@@ -1,41 +1,55 @@
 const {createReadStream} = require('fs')
 const {createServer} = require('http')
 const {join, normalize} = require('path')
+const {parse} = require('url')
 const {stringify} = JSON
 
 function createFileServer (options) {
   if (!options) throw new Error('options are mandatory')
-  return createServer(requestHandlerFor(options))
+  let handler = new RequestHandler(options)
+
+  return createServer((req, res) => handler.handle(req, res))
 }
 
-function requestHandlerFor (options) {
-  return (req, res) => {
-    const filename = join(options.cwd, normalize(req.url))
-    createReadStream(filename)
-      .on('error', errorHandlerFor(req, res, options))
-      .pipe(res)
+class RequestHandler {
+  constructor (options) {
+    this.options = options
   }
-}
 
-function errorHandlerFor (req, res, options) {
-  const {parse} = require('url')
-  const {join} = require('path')
-  const {pathname} = parse(req.url)
-  return (err) => {
+  handle (req, res) {
+    this.req = req
+    this.res = res
+
+    const filename = join(this.options.cwd, normalize(this.req.url))
+    this.readStream(filename)
+  }
+
+  error (err) {
     if (err.code === 'EISDIR') {
-      const filename = join(options.cwd, pathname, options.defaultFile)
-      createReadStream(filename)
-        .on('error', errorHandlerFor(req, res, options))
-        .pipe(res)
-    } else if (err.code === 'ENOENT') {
-      const filename = join(options.cwd, options.errorFile)
-      res.writeHead(404)
-      createReadStream(filename)
-        .on('error', errorHandlerFor(req, res, options))
-        .pipe(res)
-    } else {
-      res.end(stringify(err))
+      return this.readStream(this.defaultFilePath())
     }
+
+    if (err.code === 'ENOENT') {
+      this.res.writeHead(404)
+      return this.readStream(this.errorFilePath())
+    }
+
+    this.res.end(stringify(err))
+  }
+
+  readStream (filename) {
+    createReadStream(filename)
+      .on('error', (err) => this.error(err))
+      .pipe(this.res)
+  }
+
+  errorFilePath () {
+    return join(this.options.cwd, this.options.errorFilePath)
+  }
+
+  defaultFilePath () {
+    const {pathname} = parse(this.req.url)
+    return join(this.options.cwd, pathname, this.options.defaultFile)
   }
 }
 
