@@ -21,4 +21,9 @@ test('m.args', () => {
     const args = ['should', 'be', 'ignored', '--port', '8080', '--cwd', '.']
     deepEqual(parse(args), {port: '8080', cwd: '.'})
   })
+
+  test('empty option if no flags', () => {
+    const args = ['should', 'be', 'ignored']
+    deepEqual(parse(args), {})
+  })
 })
