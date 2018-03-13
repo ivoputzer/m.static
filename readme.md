@@ -7,7 +7,7 @@
 
 ```
   $ npm i
-  $ npm start [port] [cwd] [defaultFile] [errorFile]
+  $ npm start --port 8088 --cwd ./ --defaultFile index.html --errorFile 404.html
 ```
 
 # Global Install
@@ -15,5 +15,5 @@
 when installed globally `m.static` can be used as follows:
 ```
   $ npm i -g m.static
-  $ m.static [port] [cwd] [defaultFile] [errorFile]
+  $ m.static --port 8088 --cwd ./ --defaultFile index.html --errorFile 404.html
 ```
