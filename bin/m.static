@@ -2,16 +2,18 @@
 
 const {createRequestListener} = require('..')
 const {createServer} = require('http')
+const {parse} = require('../lib/args')
 
-const port = process.argv[2] || 8088
-const cwd = process.argv[3] || process.cwd()
+const options = Object.assign({
+  port: '8088',
+  cwd: process.cwd(),
+  defaultFile: 'index.html',
+  errorFile: '404.html'
+}, parse(process.argv.slice(2)))
 
-const defaultFile = process.argv[4] || 'index.html'
-const errorFile = process.argv[5] || '404.html'
+// // todo: https with cert/key via flags/options
+// //       key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+// //       cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
 
-// todo: https with cert/key via flags/options
-//       key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
-//       cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
-
-const requestListener = createRequestListener({cwd, defaultFile, errorFile})
-createServer(requestListener).listen(port)
+const requestListener = createRequestListener(options)
+createServer(requestListener).listen(options.port)
