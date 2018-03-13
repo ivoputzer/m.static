@@ -6,6 +6,11 @@
   "bin": {
     "m.static": "bin/m.static"
   },
+  "config": {
+    "port": 8080,
+    "defaultFile": "index.html",
+    "errorFile": "404.html"
+  },
   "devDependencies": {
     "istanbul": "^0.4.5",
     "m.test": "0.0.57",
