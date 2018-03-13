@@ -1,56 +1,35 @@
 const {createReadStream} = require('fs')
-const {createServer} = require('http')
 const {join, normalize} = require('path')
 const {parse} = require('url')
-const {stringify} = JSON
 
-function createFileServer (options) {
+function createRequestListener (options) {
   if (!options) throw new Error('options are mandatory')
-  let handler = new RequestHandler(options)
+  // todo: check options and set default options here
 
-  return createServer((req, res) => handler.handle(req, res))
-}
+  return function requestListener (req, res) {
+    const requestFile = join(options.cwd, req.url)
+    const defaultFile = join(options.cwd, req.url, options.defaultFile)
+    const errorFile = join(options.cwd, options.errorFile)
 
-class RequestHandler {
-  constructor (options) {
-    this.options = options
-  }
+    return createReadStream(requestFile)
+      .on('error', handleError)
+      .pipe(res)
 
-  handle (req, res) {
-    this.req = req
-    this.res = res
-
-    const filename = join(this.options.cwd, normalize(this.req.url))
-    this.readStream(filename)
-  }
-
-  error (err) {
-    if (err.code === 'EISDIR') {
-      return this.readStream(this.defaultFilePath())
+    function handleError (err) {
+      if (err.code === 'EISDIR') {
+        createReadStream(defaultFile)
+          .on('error', handleError)
+          .pipe(res)
+      } else if (err.code === 'ENOENT') {
+        res.writeHead(404)
+        createReadStream(errorFile)
+          .on('error', handleError)
+          .pipe(res)
+      } else {
+        res.end(JSON.stringify(err))
+      }
     }
-
-    if (err.code === 'ENOENT') {
-      this.res.writeHead(404)
-      return this.readStream(this.errorFilePath())
-    }
-
-    this.res.end(stringify(err))
-  }
-
-  readStream (filename) {
-    createReadStream(filename)
-      .on('error', (err) => this.error(err))
-      .pipe(this.res)
-  }
-
-  errorFilePath () {
-    return join(this.options.cwd, this.options.errorFilePath)
-  }
-
-  defaultFilePath () {
-    const {pathname} = parse(this.req.url)
-    return join(this.options.cwd, pathname, this.options.defaultFile)
   }
 }
 
-module.exports = {createFileServer}
+module.exports = {createRequestListener}

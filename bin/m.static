@@ -1,10 +1,17 @@
 #!/usr/bin/env node
 
-const {createFileServer} = require('..')
+const {createRequestListener} = require('..')
+const {createServer} = require('http')
 
 const port = process.argv[2] || 8088
 const cwd = process.argv[3] || process.cwd()
+
 const defaultFile = process.argv[4] || 'index.html'
 const errorFile = process.argv[5] || '404.html'
 
-createFileServer({cwd, defaultFile, errorFile}).listen(port)
+// todo: https with cert/key via flags/options
+//       key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+//       cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
+
+const requestListener = createRequestListener({cwd, defaultFile, errorFile})
+createServer(requestListener).listen(port)
