@@ -27,7 +27,7 @@
     "lint": "standard",
     "test": "m.test",
     "start": "node bin/m.static $@",
-    "coverage": "node --require ./node_modules/m.test/global.js ./node_modules/istanbul/lib/cli.js cover --print detail test/index.js"
+    "coverage": "node --require ./node_modules/m.test/global.js ./node_modules/istanbul/lib/cli.js cover --print detail test"
   },
   "repository": {
     "type": "git",
