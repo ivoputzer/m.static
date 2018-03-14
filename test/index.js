@@ -1,7 +1,6 @@
-const {ok, equal, throws, doesNotThrow} = require('assert')
-const {get} = require('http')
+const {ok, equal, throws} = require('assert')
 const {Writable} = require('stream')
-const {join, basename} = require('path')
+const {join} = require('path')
 const {readFileSync} = require('fs')
 const {createRequestListener} = require('..')
 
