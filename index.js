@@ -1,6 +1,5 @@
 const {createReadStream} = require('fs')
-const {join, normalize} = require('path')
-const {parse} = require('url')
+const {join} = require('path')
 
 function createRequestListener (options) {
   if (!options) throw new Error('options are mandatory')
