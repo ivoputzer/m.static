@@ -1,10 +1,10 @@
 const {ok, equal, throws} = require('assert')
-const {Writable} = require('stream')
-const {join} = require('path')
-const {readFileSync} = require('fs')
-const {createRequestListener} = require('..')
+const {deepStrictEqual} = require('assert')
 
 test('exports.createRequestListener', () => {
+  const {readFileSync} = require('fs')
+  const {createRequestListener} = require('..')
+
   test('is callable', () => {
     ok(createRequestListener instanceof Function)
   })
@@ -15,7 +15,7 @@ test('exports.createRequestListener', () => {
 
   test('returns requestListener', () => {
     const requestListener = createRequestListener({
-      cwd: join(__dirname, '../www'),
+      cwd: pathFor('www'),
       defaultFile: 'index.html',
       errorFile: '404.html'
     })
@@ -25,39 +25,45 @@ test('exports.createRequestListener', () => {
     })
 
     test('responds 200 when pathname exists', done => {
-      const expected = join(__dirname, '../www/index.html')
-      request('/index.html').on('finish', function () {
-        equal(this.body, readFileSync(expected))
-        done()
-      })
+      requestFor('/index.html')
+        .on('finish', function () {
+          equal(this.body, readFileSync(pathFor('www', 'index.html')))
+          done()
+        })
     })
 
     test('responds 200 defaultFile when pathname is directory', done => {
-      const expected = join(__dirname, '../www/index.html')
-      request('/').on('finish', function () {
-        equal(this.body, readFileSync(expected))
-        done()
-      })
+      requestFor('/')
+        .on('finish', function () {
+          equal(this.body, readFileSync(pathFor('www', 'index.html')))
+          done()
+        })
     })
 
     test('responds 404 errorFile when pathname does not exist', done => {
-      const expected = join(__dirname, '../www/404.html')
-      request('/does-not-exist').on('finish', function () {
-        equal(this.body, readFileSync(expected))
-        done()
-      })
+      requestFor('/does-not-exist')
+        .on('finish', function () {
+          equal(this.body, readFileSync(pathFor('www', '404.html')))
+          done()
+        })
     })
 
     test.skip('responds with error json on every other error', done => {
-      request('/forbidden.html').on('finish', function () {
-        equal(JSON.parse(this.body).code, 'EACCES')
-        done()
-      })
+      requestFor('/forbidden.html')
+        .on('finish', function ({parse} = JSON) {
+          const {code} = parse(this.body)
+          equal(code, 'EACCES')
+          done()
+        })
     })
 
-    function request (url) {
-      const body = []
-      const req = {url}
+    function pathFor (...paths) {
+      const {join} = require('path')
+      return join(__dirname, '..', ...paths)
+    }
+
+    function requestFor (url, headers = {}, body = []) {
+      const {Writable} = require('stream')
       const res = new Writable({
         write (chunk, enc, done) {
           body.push(chunk)
@@ -65,32 +71,30 @@ test('exports.createRequestListener', () => {
           done()
         }
       })
-      res.writeHead = Function.prototype
-      requestListener(req, res)
-      return res
+      requestListener({url, headers}, res)
+      return Object.assign(res, {
+        writeHead: Function.prototype
+      })
     }
   })
 })
 
-const {createServer} = require('..')
-
-test('exports.createRequestListener', () => {
-  const http = require('http')
-  const https = require('https')
+test('exports.createServer', () => {
+  const {createCertificate} = require('pem')
+  const {createServer} = require('..')
 
   test('is callable', () => {
     ok(createServer instanceof Function)
   })
 
   test('returns http.Server when cert and key options are missing', () => {
-    ok(createServer(Function.prototype, {}) instanceof http.Server)
+    ok(createServer(Function.prototype, {}) instanceof require('http').Server)
   })
 
   test('returns https.Server when cert and key options are provided', done => {
-    const {createCertificate} = require('pem')
     createCertificate({days: 1, selfSigned: true}, function (err, {serviceKey: key, certificate: cert} = {}) {
       if (err) done(err)
-      ok(createServer(Function.prototype, {cert, key}) instanceof https.Server)
+      ok(createServer(Function.prototype, {cert, key}) instanceof require('https').Server)
       done()
     })
   })
@@ -98,47 +102,46 @@ test('exports.createRequestListener', () => {
   test.skip('returns https.Server when cert and key options are readable paths', Function.prototype)
 })
 
-const {deepStrictEqual} = require('assert')
-const {parse} = require('../lib/args')
+test('lib.args', () => {
+  const {parse} = require('../lib/args')
 
-test('m.args', () => {
   test('parses one flag', () => {
-    const args = ['--cwd', '.']
-    deepStrictEqual(parse(args), {cwd: '.'})
+    const parsed = parse(['--cwd', '.'])
+    deepStrictEqual(parsed, {cwd: '.'})
   })
 
   test('parses numeric flag', () => {
-    const args = ['--port', '8080']
-    deepStrictEqual(parse(args), {port: 8080})
+    const parsed = parse(['--port', '8080'])
+    deepStrictEqual(parsed, {port: 8080})
   })
 
   test('parses multiple flag', () => {
-    const args = ['--port', '8080', '--cwd', '.']
-    deepStrictEqual(parse(args), {port: 8080, cwd: '.'})
+    const parsed = parse(['--port', '8080', '--cwd', '.'])
+    deepStrictEqual(parsed, {port: 8080, cwd: '.'})
   })
 
   test('flags without value should be boolean', () => {
-    const args = ['--active', '--port', '8080', '--cwd', '.']
-    deepStrictEqual(parse(args), {active: true, port: 8080, cwd: '.'})
+    const parsed = parse(['--active', '--port', '8080', '--cwd', '.'])
+    deepStrictEqual(parsed, {active: true, port: 8080, cwd: '.'})
   })
 
   test('flags without value should be boolean', () => {
-    const args = ['--port', '8080', '--cwd', '.', '--active']
-    deepStrictEqual(parse(args), {active: true, port: 8080, cwd: '.'})
+    const parsed = parse(['--port', '8080', '--cwd', '.', '--active'])
+    deepStrictEqual(parsed, {active: true, port: 8080, cwd: '.'})
   })
 
   test('parses multiple flag ignoring not paired options', () => {
-    const args = ['--port', '8080', '--cwd', '.', '12']
-    deepStrictEqual(parse(args), {port: 8080, cwd: '.'})
+    const parsed = parse(['--port', '8080', '--cwd', '.', '12'])
+    deepStrictEqual(parsed, {port: 8080, cwd: '.'})
   })
 
   test('ignores items that not starts with --', () => {
-    const args = ['should', 'be', 'ignored', '--port', '8080', '--cwd', '.']
-    deepStrictEqual(parse(args), {port: 8080, cwd: '.'})
+    const parsed = parse(['should', 'be', 'ignored', '--port', '8080', '--cwd', '.'])
+    deepStrictEqual(parsed, {port: 8080, cwd: '.'})
   })
 
   test('empty option if no flags', () => {
-    const args = ['should', 'be', 'ignored']
-    deepStrictEqual(parse(args), {})
+    const parsed = parse(['should', 'be', 'ignored'])
+    deepStrictEqual(parsed, {})
   })
 })
