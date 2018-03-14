@@ -2,7 +2,7 @@ const {ok, equal, throws} = require('assert')
 const {Writable} = require('stream')
 const {join} = require('path')
 const {readFileSync} = require('fs')
-const {createRequestListener} = require('..')
+const {createRequestListener} = require('../..')
 
 test('exports.createRequestListener', () => {
   test('is callable', () => {
@@ -15,7 +15,7 @@ test('exports.createRequestListener', () => {
 
   test('returns requestListener', () => {
     const requestListener = createRequestListener({
-      cwd: join(__dirname, '..', 'www'),
+      cwd: join(__dirname, '../../www'),
       defaultFile: 'index.html',
       errorFile: '404.html'
     })
@@ -25,7 +25,7 @@ test('exports.createRequestListener', () => {
     })
 
     test('responds 200 when pathname exists', done => {
-      const expected = join(__dirname, '../www/index.html')
+      const expected = join(__dirname, '../../www/index.html')
       request('/index.html').on('finish', function () {
         equal(this.body, readFileSync(expected))
         done()
@@ -33,7 +33,7 @@ test('exports.createRequestListener', () => {
     })
 
     test('responds 200 defaultFile when pathname is directory', done => {
-      const expected = join(__dirname, '../www/index.html')
+      const expected = join(__dirname, '../../www/index.html')
       request('/').on('finish', function () {
         equal(this.body, readFileSync(expected))
         done()
@@ -41,7 +41,7 @@ test('exports.createRequestListener', () => {
     })
 
     test('responds 404 errorFile when pathname does not exist', done => {
-      const expected = join(__dirname, '../www/404.html')
+      const expected = join(__dirname, '../../www/404.html')
       request('/does-not-exist').on('finish', function () {
         equal(this.body, readFileSync(expected))
         done()
