@@ -1,6 +1,3 @@
-const {createReadStream} = require('fs')
-const {join} = require('path')
-
 exports.createServer = (requestListener, options) => {
   const {createServer} = require('http')
   const {createServer: createSecureServer} = require('https')
@@ -10,8 +7,7 @@ exports.createServer = (requestListener, options) => {
 }
 
 exports.createRequestListener = (options) => {
-  const {join, normalize} = require('path')
-  const {parse} = require('url')
+  const {join} = require('path')
   const {createReadStream} = require('fs')
 
   if (!options) throw new Error('options are mandatory')
