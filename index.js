@@ -1,8 +1,21 @@
 const {createReadStream} = require('fs')
 const {join} = require('path')
 
-function createRequestListener (options) {
+exports.createServer = (requestListener, options) => {
+  const {createServer} = require('http')
+  const {createServer: createSecureServer} = require('https')
+  return options.hasOwnProperty('key') && options.hasOwnProperty('cert')
+    ? createSecureServer(options, requestListener)
+    : createServer(requestListener)
+}
+
+exports.createRequestListener = (options) => {
+  const {join, normalize} = require('path')
+  const {parse} = require('url')
+  const {createReadStream} = require('fs')
+
   if (!options) throw new Error('options are mandatory')
+
   // todo: check options and set default options here
 
   return function requestListener (req, res) {
@@ -14,7 +27,7 @@ function createRequestListener (options) {
       .on('error', handleError)
       .pipe(res)
 
-    function handleError (err) {
+    function handleError (err, {stringify} = JSON) {
       if (err.code === 'EISDIR') {
         createReadStream(defaultFile)
           .on('error', handleError)
@@ -25,10 +38,8 @@ function createRequestListener (options) {
           .on('error', handleError)
           .pipe(res)
       } else {
-        res.end(JSON.stringify(err))
+        res.end(stringify(err))
       }
     }
   }
 }
-
-module.exports = {createRequestListener}
