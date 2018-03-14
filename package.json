@@ -37,6 +37,9 @@
     "file",
     "server",
     "http",
+    "https",
+    "assets",
+    "development",
     "m.icro"
   ],
   "author": "Ivo von Putzer Reibegg <ivo.putzer@gmail.com>",
