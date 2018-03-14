@@ -1,19 +1,12 @@
 #!/usr/bin/env node
 
-const {createRequestListener} = require('..')
-const {createServer} = require('http')
+const {createServer, createRequestListener} = require('..')
 const {parse} = require('../lib/args')
+const {config} = require('../package')
 
-const options = Object.assign({
-  port: '8088',
-  cwd: process.cwd(),
-  defaultFile: 'index.html',
-  errorFile: '404.html'
-}, parse(process.argv.slice(2)))
-
-// // todo: https with cert/key via flags/options
-// //       key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
-// //       cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
-
+const cwd = process.cwd()
+const options = Object.assign(config, {cwd}, parse(process.argv.slice(2)))
 const requestListener = createRequestListener(options)
-createServer(requestListener).listen(options.port)
+
+process.setMaxListeners(0)
+createServer(requestListener, options).listen(options.port)
