@@ -12,6 +12,16 @@ test('m.args', () => {
     deepEqual(parse(args), {port: '8080', cwd: '.'})
   })
 
+  test('flags without value should be boolean', () => {
+    const args = ['--active', '--port', '8080', '--cwd', '.']
+    deepEqual(parse(args), {active: true, port: '8080', cwd: '.'})
+  })
+
+  test('flags without value should be boolean', () => {
+    const args = ['--port', '8080', '--cwd', '.', '--active']
+    deepEqual(parse(args), {active: true, port: '8080', cwd: '.'})
+  })
+
   test('parses multiple flag ignoring not paired options', () => {
     const args = ['--port', '8080', '--cwd', '.', '12']
     deepEqual(parse(args), {port: '8080', cwd: '.'})
