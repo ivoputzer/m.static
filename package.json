@@ -1,6 +1,6 @@
 {
   "name": "m.static",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "m(icro)static is a lightweight static file server written in nodejs to use on the fly",
   "main": "index.js",
   "bin": {
