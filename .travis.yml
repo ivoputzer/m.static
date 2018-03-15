@@ -4,10 +4,10 @@ node_js:
 - 8
 - 7
 - 6
-stages:
-- test
-- deploy
-before_script: npm run lint
+# stages:
+# - test
+# - deploy
+# before_script: npm run lint
 jobs:
   # - stage: coverage
   #   before_script: skip
