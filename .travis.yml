@@ -8,11 +8,12 @@ before_script: npm run lint
 script: npm run test
 jobs:
   include:
-    # - stage: coverage
-    #   script:
-    #     - npm run coverage
-    #     - npm install coveralls
-    #     - cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
+    - stage: coverage
+      before_script: skip
+      script:
+        - npm run coverage
+        - npm install coveralls
+        - cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
     - stage: deploy
       install: skip
       before_script: skip
