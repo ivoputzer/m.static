@@ -7,6 +7,14 @@ node_js:
 - 8
 - 7
 - 6
+- 5
+matrix:
+  fast_finish: true
+  allow_failures:
+    - node_js:
+      - 7
+      - 6
+      - 5
 jobs:
   include:
   - stage: coverage
