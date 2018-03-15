@@ -25,8 +25,8 @@
     "node": "node",
     "pretest": "standard",
     "test": "m.test",
-    "start": "node bin/m.static $@",
-    "coverage": "node --require ./node_modules/m.test/global.js ./node_modules/istanbul/lib/cli.js cover --print detail test"
+    "coverage": "node --require ./node_modules/m.test/global.js ./node_modules/istanbul/lib/cli.js cover --print detail test",
+    "start": "node bin/m.static $@"
   },
   "repository": {
     "type": "git",
