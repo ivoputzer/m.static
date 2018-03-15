@@ -12,7 +12,6 @@
     "errorFile": "404.html"
   },
   "devDependencies": {
-    "istanbul": "^0.4.5",
     "m.test": "0.0.57",
     "pem": "^1.12.3",
     "standard": "^11.0.0"
@@ -24,7 +23,7 @@
   },
   "scripts": {
     "node": "node",
-    "lint": "standard",
+    "pretest": "standard",
     "test": "m.test",
     "start": "node bin/m.static $@",
     "coverage": "node --require ./node_modules/m.test/global.js ./node_modules/istanbul/lib/cli.js cover --print detail test"
@@ -49,5 +48,8 @@
     "url": "https://github.com/ivoputzer/m.static/issues"
   },
   "homepage": "https://github.com/ivoputzer/m.static#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "optionalDependencies": {
+    "istanbul": "^0.4.5"
+  }
 }
