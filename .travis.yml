@@ -14,18 +14,19 @@ after_success:
 # - cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
 jobs:
   include:
-    # - stage: lint
-    #   script: npm run lint
-    # - stage: test
-    #   script: npm run test
-    # - stage: coverage
-    #   script: npm run coverage
-    - stage: coveralls
-      node_js: 9
-      script: npm install coveralls
-      script: cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
-    - stage: npm
-      node_js: 9
+#     # - stage: lint
+#     #   script: npm run lint
+#     # - stage: test
+#     #   script: npm run test
+#     # - stage: coverage
+#     #   script: npm run coverage
+#     - stage: coveralls
+#       node_js: 9
+#       script: npm install coveralls
+#       script: cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
+    - stage: deploy
+      install: skip
+      script: skip
       deploy:
         provider: npm
         skip_cleanup: true
