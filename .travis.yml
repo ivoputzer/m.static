@@ -1,21 +1,22 @@
 language: node_js
-node_js:
-- 9
-- 8
-- 7
-- 6
 jobs:
   include:
     - stage: linter
       script: npm run lint
+    - stage: test
+      node_js: 9
+    - stage: test
+      node_js: 8
+    - stage: test
+      node_js: 7
+    - stage: test
+      node_js: 6
     - stage: coverage
       script:
-        - npm run coverage
         - npm install coveralls
+        - npm run coverage
         - cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
     - stage: deploy
-      install: skip
-      script: skip
       deploy:
         provider: npm
         email: ivo.putzer@gmail.com
