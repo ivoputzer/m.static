@@ -1,22 +1,21 @@
 language: node_js
 node_js:
-  - 9
-  - 8
-  - 7
-  - 6
+- 9
+- 8
+- 7
+- 6
+stages:
+- test
+- deploy
 before_script: npm run lint
-script: npm run test
 jobs:
-  - stage: coverage
-    before_script: skip
-    script:
-      - npm install coveralls
-      - npm run coverage
-      - cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
+  # - stage: coverage
+  #   before_script: skip
+  #   script:
+  #     - npm install coveralls
+  #     - npm run coverage
+  #     - cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
   - stage: deploy
-    install: skip
-    before_script: skip
-    script: skip
     deploy:
       provider: npm
       email: ivo.putzer@gmail.com
