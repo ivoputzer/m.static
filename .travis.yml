@@ -4,15 +4,9 @@ node_js:
 - 8
 - 7
 - 6
-stages:
-- lint
-- test
-- coverage
-- deploy
+before_script: npm run lint
+script: npm run test
 jobs:
-  - stage: lint
-    before_script: npm run lint
-    script: true
   - stage: coverage
     before_script: skip
     script:
@@ -21,6 +15,7 @@ jobs:
     - cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
   - stage: deploy
     install: skip
+    before_script: skip
     script: skip
     deploy:
       provider: npm
