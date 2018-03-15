@@ -27,8 +27,6 @@ jobs:
         repo: ivoputzer/m.static
         tags: false
         branch: master
-  allow_failures:
-    - node_js: 7
-    - node_js: 6
+  allow_failures: # prior to lts version and module spec
     - node_js: 5
     - node_js: 4
