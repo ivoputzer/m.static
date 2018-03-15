@@ -4,12 +4,11 @@ node_js:
 - 8
 - 7
 - 6
-before_script:
-- npm run lint
-script:
-- npm run test
 jobs:
   include:
+    - stage: test
+      before_script: npm run lint
+      script: npm run test
     # - stage: coverage
     #   script:
     #     - npm run coverage
@@ -20,7 +19,6 @@ jobs:
       script: skip
       deploy:
         provider: npm
-        skip_cleanup: true
         email: ivo.putzer@gmail.com
         api_key:
           secure: KIPaF0zcL8P0EjTOtDjzwemYb6v5UN/S4H8gpdG1a1WzOOGIFND6T08eamC+iWcHPZznhRxZL13jrINUmpm+L02E+gtCneuO9V/t2n9htxy7s8hvgdEqj0gR/6MEjHDerOxfDT+dAyhLk3J2m7q0fuNJNR3mCMqLJU+ggZeFDlIO0YHofdUWQ8WmEnz1kK3Yhh77zQ/kH7C1zJFldPzBn3Xg7xZMb84/vugM06ckZqkR/dQV8ZAYi3TcwOwVVoz61lGhvAd4CACkcCv8qPu/zrQrjfR71MyO5h7TeX8SZ/D5d/pQY4o/EoErpttmuzMDEgh9X6ZWlRP8D3G5auulsNVFG3hCGMBG81MEtAdUhgH/odiRrPx6x/5DhC/LSTamC2wQvisJAq/OxuvaHtBBccOmfhFSzn//+bN+rKYVERD7LCL4jurPdlwNo0kclchv0FI4oTHOpM9LZgrx1RskJLhAECy/F0BZh1cHZdHOBNqb6xNYrx75ZgRI9SXZR2GDD3VNfEI0FWg73AVuYRY+x8qS+3ex9GkWhraDETf1z7gBFTRGKdsWmvBMvEFDqFgEq97bqPcg41Zv9n0GKq7uVEW7l7R3R/mV3r7M0PthNoNtxTlrQq1nZIsU2kAfR+GITBgzHVm5iZKqSkaVfTwQKqBxjCa4iThYJ3HyZVzJLQs=
