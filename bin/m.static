@@ -8,5 +8,4 @@ const cwd = process.cwd()
 const options = Object.assign(config, {cwd}, parse(process.argv.slice(2)))
 const requestListener = createRequestListener(options)
 
-process.setMaxListeners(0)
-createServer(requestListener, options).listen(options.port)
+return createServer(requestListener, options).listen(options.port)
