@@ -28,7 +28,7 @@ exports.createRequestListener = (options) => {
         createReadStream(defaultFile)
           .on('error', handleError)
           .pipe(res)
-      } else if (err.code === 'ENOENT') {
+      } else if (err.code === 'ENOENT' && err.path !== errorFile) {
         res.writeHead(404)
         createReadStream(errorFile)
           .on('error', handleError)
