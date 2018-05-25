@@ -3,6 +3,7 @@ install: npm install --no-optional
 git:
   depth: 1
 node_js:
+- 10
 - 9
 - 8
 - 7
